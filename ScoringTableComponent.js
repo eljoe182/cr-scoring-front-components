@@ -18,9 +18,10 @@ const ScoringTableComponent = ({ scoringData }) => {
       },
       data: data,
       columns: [
-        { class: 'text-center', data: 'phoneNumber' },
-        { class: 'text-center', data: 'score' },
-        { class: 'text-center', data: 'beastDate' },
+        { class: 'text-center text-uppercase', data: 'phoneNumber' },
+        { class: 'text-center text-uppercase', data: 'score' },
+        { class: 'text-center text-uppercase', data: 'operator' },
+        { class: 'text-center text-uppercase', data: 'beastDate' },
       ],
       destroy: true,
     };
@@ -69,6 +70,7 @@ const ScoringTableComponent = ({ scoringData }) => {
             <tr>
               <th className='text-center'>Phone Number</th>
               <th className='text-center'>Score</th>
+              <th className='text-center'>Operator</th>
               <th className='text-center'>Beast Date</th>
             </tr>
           </thead>
