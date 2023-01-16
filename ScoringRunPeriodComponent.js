@@ -1,7 +1,7 @@
 'use strict';
 const { useState } = React;
 
-const RunPeriodComponent = ({ responsePeriod }) => {
+const RunPeriodComponent = ({ responseDataPeriod, responsePeriod }) => {
   const [loading, setLoading] = useState(false);
   const [period, setPeriod] = useState('');
 
@@ -19,7 +19,8 @@ const RunPeriodComponent = ({ responsePeriod }) => {
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
     }).then((response) => response.json());
-    responsePeriod(response.data);
+    responseDataPeriod(response.data);
+    responsePeriod(period);
     setLoading(false);
   };
 

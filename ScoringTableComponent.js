@@ -2,7 +2,7 @@
 
 const { useEffect, useState, useRef } = React;
 
-const ScoringTableComponent = ({ scoringData }) => {
+const ScoringTableComponent = ({ scoringData, period }) => {
   const [data, setData] = useState([]);
   const [saving, setSaving] = useState(false);
   const tableRef = useRef();
@@ -10,8 +10,8 @@ const ScoringTableComponent = ({ scoringData }) => {
   useEffect(() => {
     const configTable = {
       lengthMenu: [
-        [5, 25, 50, -1],
-        [5, 25, 50, 'Todos'],
+        [5, 25, 50, 100, -1],
+        [5, 25, 50, 100, 'Todos'],
       ],
       language: {
         url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json',
@@ -47,7 +47,10 @@ const ScoringTableComponent = ({ scoringData }) => {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        period,
+        data,
+      }),
     }).then((response) => response.json());
     setSaving(false);
   };

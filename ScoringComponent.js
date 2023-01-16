@@ -9,13 +9,14 @@ const ScoringComponent = () => {
     success: [],
     errors: [],
   });
+  const [period, setPeriod] = useState('');
 
   return (
     <div class='container-fluid spark-screen'>
       <div class='row'>
         <div class='col-md-9 col-md-offset-1'>
-          <RunPeriodComponent responsePeriod={setResponsePeriod} />
-          <ScoringTableComponent scoringData={responsePeriod.success} />
+          <RunPeriodComponent responseDataPeriod={setResponsePeriod} responsePeriod={setPeriod} />
+          <ScoringTableComponent scoringData={responsePeriod} period={period} />
         </div>
       </div>
     </div>
