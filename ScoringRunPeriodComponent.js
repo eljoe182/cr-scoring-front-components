@@ -17,7 +17,6 @@ const RunPeriodComponent = ({ responseDataPeriod, responsePeriod }) => {
     const response = await fetch(`${SERVER_SCORING}/scoring/period/${period}`, {
       method: 'GET',
       mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
     }).then((response) => response.json());
     responseDataPeriod(response.data);
     responsePeriod(period);

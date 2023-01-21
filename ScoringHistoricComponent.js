@@ -1,5 +1,5 @@
 'use strict';
-const { useState, useEffect, useRef } = React;
+const { useEffect, useRef } = React;
 const appRoot = document.getElementById('scoring_historic_component');
 
 const SERVER_SCORING = 'http://localhost:3000';
