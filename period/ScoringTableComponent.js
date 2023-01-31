@@ -22,6 +22,9 @@ const ScoringTableComponent = ({ scoringData, period }) => {
         { class: 'text-center text-uppercase', data: 'score' },
         { class: 'text-center text-uppercase', data: 'operator' },
         { class: 'text-center text-uppercase', data: 'beastDate' },
+        { class: 'text-center text-uppercase', data: 'withWhatsapp', render: (data) => {
+          return data ? 'Si' : 'No';
+        } },
       ],
       destroy: true,
     };
@@ -75,6 +78,7 @@ const ScoringTableComponent = ({ scoringData, period }) => {
               <th className='text-center'>Score</th>
               <th className='text-center'>Operator</th>
               <th className='text-center'>Beast Date</th>
+              <th className='text-center'>With Whatsapp</th>
             </tr>
           </thead>
           <tbody></tbody>
