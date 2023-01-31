@@ -27,7 +27,11 @@ const ScoringHistoricComponent = () => {
       serverSide: true,
       columns: [
         { class: 'text-center', data: 'period' },
+        { class: 'text-center', data: 'raw.info' },
         { class: 'text-center', data: 'createdAt' },
+        { class: 'text-center', data: null, render: () => {
+          return `<button class='btn btn-primary btn-sm'><i class='fa fa-sync' ></i> Relaunch</button>`;
+        } },
       ],
       destroy: true,
     };
@@ -47,7 +51,9 @@ const ScoringHistoricComponent = () => {
           <thead>
             <tr>
               <th className='text-center'>Period</th>
+              <th className='text-center'>Info</th>
               <th className='text-center'>Executed at</th>
+              <th className='text-center'></th>
             </tr>
           </thead>
           <tbody></tbody>
