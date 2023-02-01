@@ -24,8 +24,14 @@ const ScoringMatchDialTableComponent = ({ matchData, core, listId }) => {
         { class: 'text-center text-uppercase', data: 'phoneNumber' },
         { class: 'text-center text-uppercase', data: 'operator' },
         { class: 'text-center text-uppercase', data: 'score' },
+        { class: 'text-center text-uppercase', data: 'rank' },
         { class: 'text-center text-uppercase', data: 'betterManagement' },
         { class: 'text-center text-uppercase', data: 'beastTry' },
+        {
+          class: 'text-center text-uppercase',
+          data: 'withWhatsapp',
+          render: (data) => (data ? 'Si' : 'No'),
+        },
       ],
       destroy: true,
     };
@@ -53,7 +59,7 @@ const ScoringMatchDialTableComponent = ({ matchData, core, listId }) => {
           {data.length > 0 && <ButtonVicidialExporterComponent core={core} listId={listId} />}
         </div>
       </div>
-      <div className='box-body table-responsive-md'>
+      <div className='box-body table-responsive'>
         <table className='table table-hover table-striped nowrap' ref={tableRef}>
           <thead>
             <tr>
@@ -64,8 +70,10 @@ const ScoringMatchDialTableComponent = ({ matchData, core, listId }) => {
               <th className='text-center'>Telefono</th>
               <th className='text-center'>Operador</th>
               <th className='text-center'>Score</th>
+              <th className='text-center'>Prioridad</th>
               <th className='text-center'>Tipo contacto</th>
               <th className='text-center'>Mejor Intento</th>
+              <th className='text-center'>Whatsapp</th>
             </tr>
           </thead>
           <tbody></tbody>
