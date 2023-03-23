@@ -2,7 +2,7 @@
 const { useState } = React;
 const appRoot = document.getElementById('match_dial_scoring_component');
 
-const SERVER_SCORING = 'http://localhost:3000';
+const SERVER_SCORING = 'http://192.168.1.6:3000';
 
 const ScoringComponent = () => {
   const [data, setData] = useState([]);

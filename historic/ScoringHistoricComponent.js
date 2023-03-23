@@ -2,7 +2,7 @@
 const { useEffect, useRef } = React;
 const appRoot = document.getElementById('scoring_historic_component');
 
-const SERVER_SCORING = 'http://localhost:3000';
+const SERVER_SCORING = 'http://192.168.1.6:3000';
 
 const ScoringHistoricComponent = () => {
   const tableRef = useRef();

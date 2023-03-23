@@ -2,7 +2,7 @@
 
 const { useEffect, useState, useRef } = React;
 
-const ScoringTableComponent = ({ scoringData, period }) => {
+const ScoringTableComponent = ({ scoringData, listId, dateFrom, dateTo, campaign }) => {
   const [data, setData] = useState([]);
   const [saving, setSaving] = useState(false);
   const tableRef = useRef();
@@ -22,9 +22,13 @@ const ScoringTableComponent = ({ scoringData, period }) => {
         { class: 'text-center text-uppercase', data: 'score' },
         { class: 'text-center text-uppercase', data: 'operator' },
         { class: 'text-center text-uppercase', data: 'beastDate' },
-        { class: 'text-center text-uppercase', data: 'withWhatsapp', render: (data) => {
-          return data ? 'Si' : 'No';
-        } },
+        {
+          class: 'text-center text-uppercase',
+          data: 'withWhatsapp',
+          render: (data) => {
+            return data ? 'Si' : 'No';
+          },
+        },
       ],
       destroy: true,
     };
@@ -38,9 +42,7 @@ const ScoringTableComponent = ({ scoringData, period }) => {
     if (scoringData.length > 0) {
       setData(scoringData);
       $(tableRef.current).DataTable().clear().draw();
-      scoringData.forEach((item) => {
-        $(tableRef.current).DataTable().row.add(item).draw();
-      });
+      $(tableRef.current).DataTable().rows.add(scoringData).draw();
     }
   }, [scoringData]);
 
@@ -51,8 +53,10 @@ const ScoringTableComponent = ({ scoringData, period }) => {
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        period,
-        data,
+        listId: Number(listId),
+        dateFrom: `${dateFrom} 00:00:00`,
+        dateTo: `${dateTo} 23:59:59`,
+        campaign: campaign.campaignId,
       }),
     }).then((response) => response.json());
     setSaving(false);

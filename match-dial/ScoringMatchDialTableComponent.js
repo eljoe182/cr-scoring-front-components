@@ -45,9 +45,7 @@ const ScoringMatchDialTableComponent = ({ matchData, core, listId }) => {
     if (matchData.length > 0) {
       setData(matchData);
       $(tableRef.current).DataTable().clear().draw();
-      matchData.forEach((item) => {
-        $(tableRef.current).DataTable().row.add(item).draw();
-      });
+      $(tableRef.current).DataTable().rows.add(matchData).draw();
     }
   }, [matchData]);
 
