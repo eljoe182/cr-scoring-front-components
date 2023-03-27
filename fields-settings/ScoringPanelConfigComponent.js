@@ -1,7 +1,7 @@
 'use strict';
 const { useState, useEffect } = React;
 
-const ScoringPanelConfigComponent = ({ setRefresh }) => {
+const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [database, setDatabase] = useState([]);
@@ -13,19 +13,23 @@ const ScoringPanelConfigComponent = ({ setRefresh }) => {
   const [fieldSelected, setFieldSelected] = useState('');
   const [value, setValue] = useState(0);
 
+  const getFields = async () => {
+    const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-fields`, {
+      method: 'GET',
+      mode: 'cors',
+    }).then((response) => response.json());
+    setData(response);
+    const responseDatabase = response.map((item) => item.database);
+    setDatabase([...new Set(responseDatabase)]);
+  }
+
   useEffect(() => {
-    const getFields = async () => {
+    const getData = async () => {
       setLoading(true);
-      const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-fields`, {
-        method: 'GET',
-        mode: 'cors',
-      }).then((response) => response.json());
-      setData(response);
-      const responseDatabase = response.map((item) => item.database);
-      setDatabase([...new Set(responseDatabase)]);
+      await getFields();
       setLoading(false);
     };
-    getFields();
+    getData();
   }, []);
 
   useEffect(() => {
@@ -62,11 +66,13 @@ const ScoringPanelConfigComponent = ({ setRefresh }) => {
 
   const handlerSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     await fetch(`${SERVER_SCORING}/scoring/settings/fields/save`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        campaign,
         database: databaseSelected,
         table: tableSelected,
         field: fieldSelected,
@@ -80,6 +86,7 @@ const ScoringPanelConfigComponent = ({ setRefresh }) => {
     setFields([]);
     setValue(0);
     setRefresh(true);
+    setLoading(false);
   };
 
   return (

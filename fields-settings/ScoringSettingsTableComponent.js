@@ -1,76 +1,38 @@
 'use strict';
 
-const { useEffect, useRef } = React;
+const { useEffect, useState, useCallback } = React;
 
-const ButtonDelete = ({ id }) => {
-  const handleClick = () => {
-    console.log({ id });
-  };
+const ScoringSettingsTableComponent = ({ refresh, setRefresh, campaign, }) => {
 
-  return (
-    <button type='button' className='btn btn-danger btn-xs' onClick={handleClick}>
-      <i className='fa fa-trash'></i>
-    </button>
-  );
-};
-
-const ScoringSettingsTableComponent = ({ refresh }) => {
-  const tableRef = useRef();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const configTable = {
-      lengthMenu: [
-        [5, 25, 50],
-        [5, 25, 50],
-      ],
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json',
-      },
-      searching: false,
-      ordering: false,
-      bFilter: false,
-      ajax: {
-        url: `${SERVER_SCORING}/scoring/settings/fields/get-all`,
-        dataSrc: 'rows',
-      },
-      processing: true,
-      serverSide: true,
-      columns: [
-        { class: 'text-justify text-uppercase', data: 'database' },
-        { class: 'text-justify text-uppercase', data: 'tableName' },
-        { class: 'text-justify text-uppercase', data: 'field' },
-        { class: 'text-right', data: 'value' },
-        {
-          class: 'text-center',
-          data: 'id',
-          render: function (data, type, row) {
-            return `<button type='button' class='btn btn-danger btn-xs'>
-                      <i class='fa fa-trash'></i>
-                    </button>`;
-          },
-        },
-      ],
-      destroy: true,
-    };
-    const table = $(tableRef.current).DataTable(configTable);
-    return () => {
-      table.destroy();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (refresh) {
-      $(tableRef.current).DataTable().ajax.reload();
+    if (campaign !== '' && refresh) {
+      const getData = async () => {
+        setLoading(true);
+        setData([]);
+        const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-all/${campaign}`, {
+          method: 'GET',
+          mode: 'cors',
+        }).then((response) => response.json());
+        setData(response.rows);
+        setLoading(false);
+        setRefresh(false);
+      };
+      getData();
     }
-  }, [refresh]);
+  }, [refresh, campaign]);
 
   return (
     <div className='box'>
       <div className='box-header'>
-        <h3 className='box-title'></h3>
+        <h3 className='box-title'> Scoring Fields Settings {
+          campaign === '' ? '' : `for ${campaign}`
+        }</h3>
       </div>
       <div className='box-body table-responsive-md'>
-        <table className='table table-hover table-striped nowrap' ref={tableRef}>
+        <table className='table table-hover table-striped nowrap'>
           <thead>
             <tr>
               <th className='text-center'>Database</th>
@@ -80,9 +42,26 @@ const ScoringSettingsTableComponent = ({ refresh }) => {
               <th className='text-center'></th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            {data.map((item) => (
+              <tr key={item.id}>
+                <td>{item.database}</td>
+                <td>{item.tableName}</td>
+                <td className='text-center'>{item.field}</td>
+                <td className='text-center'>{item.value}</td>
+                <td className='text-center'>
+                  <ButtonDelete id={item.id} setRefresh={setRefresh} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
+      {loading && (
+        <div className='overlay'>
+          <i className='fa fa-refresh fa-spin'></i>
+        </div>
+      )}
     </div>
   );
 };

@@ -2,17 +2,19 @@
 const { useState } = React;
 const appRoot = document.getElementById('fields_settings');
 
-const SERVER_SCORING = 'http://192.168.1.6:3000';
+const SERVER_SCORING = 'http://localhost:3000';
 
 const ScoringFieldsSettingsComponent = () => {
   const [refresh, setRefresh] = useState(false);
+  const [campaign, setCampaign] = useState('')
 
   return (
     <div className='container-fluid spark-screen'>
       <div className='row'>
         <div className='col-md-9 col-md-offset-1'>
-          <ScoringPanelConfigComponent setRefresh={setRefresh} />
-          <ScoringSettingsTableComponent refresh={refresh} />
+          <SelectCampaignComponent setCampaign={setCampaign} setRefresh={setRefresh} />
+          <ScoringPanelConfigComponent setRefresh={setRefresh} campaign={campaign} />
+          <ScoringSettingsTableComponent refresh={refresh} setRefresh={setRefresh} campaign={campaign} />
         </div>
       </div>
     </div>
