@@ -6,12 +6,15 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
   const [data, setData] = useState([]);
   const [database, setDatabase] = useState([]);
   const [table, setTable] = useState([]);
+  const [valuesCondition, setValuesCondition] = useState([]);
   const [fields, setFields] = useState([]);
 
   const [databaseSelected, setDatabaseSelected] = useState('');
   const [tableSelected, setTableSelected] = useState('');
   const [fieldSelected, setFieldSelected] = useState('');
-  const [value, setValue] = useState(0);
+  const [conditionSelected, setConditionSelected] = useState('');
+  const [valueConditionSelected, setValueConditionSelected] = useState('');
+  const [scoringValue, setScoringValue] = useState('');
 
   const getFields = async () => {
     const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-fields`, {
@@ -21,7 +24,21 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
     setData(response);
     const responseDatabase = response.map((item) => item.database);
     setDatabase([...new Set(responseDatabase)]);
-  }
+  };
+
+  const getValuesCondition = async () => {
+    setValuesCondition([]);
+    const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-distinct-values`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        table: tableSelected,
+        field: fieldSelected,
+      }),
+    }).then((response) => response.json());
+    setValuesCondition(response);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -38,7 +55,9 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
       setFields([]);
       setTableSelected('');
       setFieldSelected('');
-      setValue(0);
+      setScoringValue(0);
+      setConditionSelected('');
+      setValueConditionSelected('');
       const responseTable = data
         .filter((item) => item.database === databaseSelected)
         .map((item) => item.table);
@@ -50,7 +69,9 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
     if (tableSelected) {
       setFields([]);
       setFieldSelected('');
-      setValue(0);
+      setScoringValue(0);
+      setConditionSelected('');
+      setValueConditionSelected('');
       const responseField = data
         .filter((item) => item.table === tableSelected)
         .map((item) => item.field);
@@ -60,7 +81,15 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
 
   useEffect(() => {
     if (fieldSelected) {
-      setValue(0);
+      setScoringValue(0);
+      setConditionSelected('');
+      setValueConditionSelected('');
+      const getData = async () => {
+        setLoading(true);
+        await getValuesCondition();
+        setLoading(false);
+      };
+      getData();
     }
   }, [fieldSelected]);
 
@@ -76,7 +105,9 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
         database: databaseSelected,
         table: tableSelected,
         field: fieldSelected,
-        value,
+        condition: conditionSelected,
+        valueCondition: valueConditionSelected,
+        valueScore: scoringValue,
       }),
     }).then((response) => response.json());
     setDatabaseSelected('');
@@ -84,7 +115,10 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
     setFieldSelected('');
     setTable([]);
     setFields([]);
-    setValue(0);
+    setConditionSelected('');
+    setValueConditionSelected('');
+    setValuesCondition([]);
+    setScoringValue(0);
     setRefresh(true);
     setLoading(false);
   };
@@ -97,7 +131,7 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
       <div className='box-body'>
         <form onSubmit={handlerSubmit}>
           <div className='form-group row'>
-            <div className='col-md-3'>
+            <div className='col-md-2'>
               <label htmlFor='database'>Database</label>
               <select
                 className='form-control'
@@ -115,7 +149,7 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
                 ))}
               </select>
             </div>
-            <div className='col-md-3'>
+            <div className='col-md-2'>
               <label htmlFor='table'>Table</label>
               <select
                 className='form-control'
@@ -133,7 +167,7 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
                 ))}
               </select>
             </div>
-            <div className='col-md-3'>
+            <div className='col-md-2'>
               <label htmlFor='field'>Fields</label>
               <select
                 className='form-control'
@@ -151,18 +185,53 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
                 ))}
               </select>
             </div>
-            <div className='col-md-3'>
-              <label htmlFor='value'>Value</label>
+            <div className='col-md-2'>
+              <label htmlFor='condition'>Condition</label>
+              <select
+                className='form-control'
+                id='condition'
+                name='condition'
+                value={conditionSelected}
+                required
+                onChange={(e) => setConditionSelected(e.target.value)}
+              >
+                <option value=''>Select a option</option>
+                <option value='='> Igual </option>
+                <option value='<'> Menor que </option>
+                <option value='>'> Mayor que </option>
+                <option value='!='> Diferente </option>
+              </select>
+            </div>
+            <div className='col-md-2'>
+              <label htmlFor='valueCondition'>Value Condition</label>
+              <select
+                className='form-control'
+                id='valueCondition'
+                name='valueCondition'
+                value={valueConditionSelected}
+                required
+                onChange={(e) => setValueConditionSelected(e.target.value)}
+              >
+                <option value=''>Select a option</option>
+                {valuesCondition.map((item, index) => (
+                  <option key={index} value={item.value}>
+                    {`${item.value}`.toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className='col-md-2'>
+              <label htmlFor='valueScore'>Value Score</label>
               <div className='input-group'>
                 <input
                   type='number'
-                  name='value'
-                  id='value'
+                  name='valueScore'
+                  id='valueScore'
                   placeholder='ej. 10'
                   className='form-control'
-                  value={value}
+                  value={scoringValue}
                   required
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={(e) => setScoringValue(e.target.value)}
                 />
                 <span className='input-group-btn'>
                   <button className='btn btn-primary btn-flat' type='submit'>

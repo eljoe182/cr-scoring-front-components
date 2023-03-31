@@ -11,7 +11,7 @@ const ScoringFieldsSettingsComponent = () => {
   return (
     <div className='container-fluid spark-screen'>
       <div className='row'>
-        <div className='col-md-9 col-md-offset-1'>
+        <div className='col-md-12'>
           <SelectCampaignComponent setCampaign={setCampaign} setRefresh={setRefresh} />
           <ScoringPanelConfigComponent setRefresh={setRefresh} campaign={campaign} />
           <ScoringSettingsTableComponent refresh={refresh} setRefresh={setRefresh} campaign={campaign} />

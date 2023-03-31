@@ -38,7 +38,9 @@ const ScoringSettingsTableComponent = ({ refresh, setRefresh, campaign, }) => {
               <th className='text-center'>Database</th>
               <th className='text-center'>Table</th>
               <th className='text-center'>Field</th>
-              <th className='text-center'>Value</th>
+              <th className='text-center'>Condition</th>
+              <th className='text-center'>Value Condition</th>
+              <th className='text-center'>Value Score</th>
               <th className='text-center'></th>
             </tr>
           </thead>
@@ -48,7 +50,9 @@ const ScoringSettingsTableComponent = ({ refresh, setRefresh, campaign, }) => {
                 <td>{item.database}</td>
                 <td>{item.tableName}</td>
                 <td className='text-center'>{item.field}</td>
-                <td className='text-center'>{item.value}</td>
+                <td className='text-center'>{item.condition}</td>
+                <td className='text-center'>{item.valueCondition}</td>
+                <td className='text-center'>{item.valueScore}</td>
                 <td className='text-center'>
                   <ButtonDelete id={item.id} setRefresh={setRefresh} />
                 </td>
