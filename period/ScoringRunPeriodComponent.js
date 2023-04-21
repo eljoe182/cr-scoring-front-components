@@ -1,7 +1,7 @@
 'use strict';
 const { useState, useEffect } = React;
 
-const RunPeriodComponent = ({ responseDataPeriod, responsePeriod }) => {
+const RunPeriodComponent = ({ responseDataPeriod, setScoringParams }) => {
   const [loading, setLoading] = useState(false);
   const [dialList, setDialList] = useState([]);
   const [dateFrom, setDateFrom] = useState('');
@@ -29,7 +29,7 @@ const RunPeriodComponent = ({ responseDataPeriod, responsePeriod }) => {
 
     const campaign = dialList.find((item) => Number(item.listId) === Number(listId));
 
-    const { success, errors } = await fetch(`${SERVER_SCORING}/cr-master/management-history/get-history`, {
+    const data = await fetch(`${SERVER_SCORING}/scoring/get`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -41,9 +41,19 @@ const RunPeriodComponent = ({ responseDataPeriod, responsePeriod }) => {
         dateTo: `${dateTo} 23:59:59`,
         campaign: campaign.campaignId,
       }),
-    }).then((response) => response.json());
-    console.log(success);
-    responseDataPeriod(success || []);
+    })
+      .then((response) => response.json())
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+    setScoringParams({
+      listId: Number(listId),
+      dateFrom: `${dateFrom} 00:00:00`,
+      dateTo: `${dateTo} 23:59:59`,
+      campaign: campaign.campaignId,
+    });
+    responseDataPeriod(data || []);
     setLoading(false);
   };
 

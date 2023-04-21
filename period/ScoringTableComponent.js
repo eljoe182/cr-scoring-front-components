@@ -2,7 +2,7 @@
 
 const { useEffect, useState, useRef } = React;
 
-const ScoringTableComponent = ({ scoringData, listId, dateFrom, dateTo, campaign }) => {
+const ScoringTableComponent = ({ scoringData, scoringParams }) => {
   const [data, setData] = useState([]);
   const [saving, setSaving] = useState(false);
   const tableRef = useRef();
@@ -20,11 +20,12 @@ const ScoringTableComponent = ({ scoringData, listId, dateFrom, dateTo, campaign
       columns: [
         { class: 'text-center text-uppercase', data: 'phoneNumber' },
         { class: 'text-center text-uppercase', data: 'score' },
-        { class: 'text-center text-uppercase', data: 'operator' },
-        { class: 'text-center text-uppercase', data: 'beastDate' },
+        { class: 'text-center text-uppercase', data: 'operator.operator' },
+        { class: 'text-center text-uppercase', data: 'betterManagement' },
+        { class: 'text-center text-uppercase', data: 'betterManagementDate' },
         {
           class: 'text-center text-uppercase',
-          data: 'withWhatsapp',
+          data: 'operator.withWhatsapp',
           render: (data) => {
             return data ? 'Si' : 'No';
           },
@@ -52,13 +53,13 @@ const ScoringTableComponent = ({ scoringData, listId, dateFrom, dateTo, campaign
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        listId: Number(listId),
-        dateFrom: `${dateFrom} 00:00:00`,
-        dateTo: `${dateTo} 23:59:59`,
-        campaign: campaign.campaignId,
-      }),
-    }).then((response) => response.json());
+      body: JSON.stringify(scoringParams),
+    })
+      .then((response) => response.json())
+      .catch((error) => {
+        console.log(error);
+        setSaving(false);
+      });
     setSaving(false);
   };
 
@@ -81,6 +82,7 @@ const ScoringTableComponent = ({ scoringData, listId, dateFrom, dateTo, campaign
               <th className='text-center'>Phone Number</th>
               <th className='text-center'>Score</th>
               <th className='text-center'>Operator</th>
+              <th className='text-center'>Beast Management</th>
               <th className='text-center'>Beast Date</th>
               <th className='text-center'>With Whatsapp</th>
             </tr>

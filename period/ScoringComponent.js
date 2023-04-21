@@ -2,21 +2,24 @@
 const { useState } = React;
 const appRoot = document.getElementById('scoring_component');
 
-const SERVER_SCORING = 'http://192.168.1.6:3000';
+const SERVER_SCORING = 'http://localhost:3000';
 
 const ScoringComponent = () => {
   const [responsePeriod, setResponsePeriod] = useState({
     success: [],
     errors: [],
   });
-  const [period, setPeriod] = useState('');
+  const [scoringParams, setScoringParams] = useState({});
 
   return (
     <div className='container-fluid spark-screen'>
       <div className='row'>
         <div className='col-md-9 col-md-offset-1'>
-          <RunPeriodComponent responseDataPeriod={setResponsePeriod} responsePeriod={setPeriod} />
-          <ScoringTableComponent scoringData={responsePeriod} period={period} />
+          <RunPeriodComponent
+            responseDataPeriod={setResponsePeriod}
+            setScoringParams={setScoringParams}
+          />
+          <ScoringTableComponent scoringData={responsePeriod} scoringParams={scoringParams} />
         </div>
       </div>
     </div>
