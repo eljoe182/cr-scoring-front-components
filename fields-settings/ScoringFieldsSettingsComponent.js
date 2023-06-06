@@ -15,6 +15,7 @@ const ScoringFieldsSettingsComponent = () => {
           <SelectCampaignComponent setCampaign={setCampaign} setRefresh={setRefresh} />
           <ScoringPanelConfigComponent setRefresh={setRefresh} campaign={campaign} />
           <ScoringSettingsTableComponent refresh={refresh} setRefresh={setRefresh} campaign={campaign} />
+          <ScoringGroupValuesComponent setRefresh={setRefresh} campaign={campaign} />
         </div>
       </div>
     </div>
