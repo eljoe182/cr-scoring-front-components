@@ -21,7 +21,10 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(scoringGroupValues),
+      body: JSON.stringify({
+        campaign,
+        ...scoringGroupValues,
+      }),
     }).then((response) => response.json());
     setRefresh(true);
     setLoading(false);
