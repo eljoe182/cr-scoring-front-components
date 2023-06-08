@@ -17,18 +17,31 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
   const [scoringValue, setScoringValue] = useState('');
 
   const getFields = async () => {
-    const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-fields`, {
+    setLoading(true);
+    await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-fields`, {
       method: 'GET',
       mode: 'cors',
-    }).then((response) => response.json());
-    setData(response);
-    const responseDatabase = response.map((item) => item.database);
-    setDatabase([...new Set(responseDatabase)]);
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((response) => {
+        setData(response);
+        const responseDatabase = response.map((item) => item.database);
+        setDatabase([...new Set(responseDatabase)]);
+      })
+      .catch((error) => {
+        console.error('There has been a problem with your fetch operation:', error);
+      });
+    setLoading(false);
   };
 
   const getValuesCondition = async () => {
     setValuesCondition([]);
-    const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-distinct-values`, {
+    await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-distinct-values`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
@@ -36,15 +49,24 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
         table: tableSelected,
         field: fieldSelected,
       }),
-    }).then((response) => response.json());
-    setValuesCondition(response);
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((response) => {
+        setValuesCondition(response);
+      })
+      .catch((error) => {
+        console.error('There has been a problem with your fetch operation:', error);
+      });
   };
 
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
       await getFields();
-      setLoading(false);
     };
     getData();
   }, []);
@@ -109,17 +131,28 @@ const ScoringPanelConfigComponent = ({ setRefresh, campaign }) => {
         valueCondition: valueConditionSelected,
         valueScore: scoringValue,
       }),
-    }).then((response) => response.json());
-    setDatabaseSelected('');
-    setTableSelected('');
-    setFieldSelected('');
-    setTable([]);
-    setFields([]);
-    setConditionSelected('');
-    setValueConditionSelected('');
-    setValuesCondition([]);
-    setScoringValue(0);
-    setRefresh(true);
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((response) => {
+        setDatabaseSelected('');
+        setTableSelected('');
+        setFieldSelected('');
+        setTable([]);
+        setFields([]);
+        setConditionSelected('');
+        setValueConditionSelected('');
+        setValuesCondition([]);
+        setScoringValue(0);
+        setRefresh(true);
+      })
+      .catch((error) => {
+        console.error('There has been a problem with your fetch operation:', error);
+      });
     setLoading(false);
   };
 

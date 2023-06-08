@@ -9,7 +9,14 @@ const ButtonDelete = ({ id, setRefresh }) => {
     const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/destroy/${id}`, {
       method: 'DELETE',
       mode: 'cors',
-    }).then((response) => response.json());
+    }).then((response) => {
+      if(!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }).catch((error) => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
     if (response.data.affected === 1) {
       setRefresh(true);
     }

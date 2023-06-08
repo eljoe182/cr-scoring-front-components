@@ -11,14 +11,19 @@ const ScoringSettingsTableComponent = ({ refresh, setRefresh, campaign }) => {
       const getData = async () => {
         setLoading(true);
         setData([]);
-        const response = await fetch(
-          `${SERVER_SCORING}/scoring/settings/fields/get-all/${campaign}`,
-          {
-            method: 'GET',
-            mode: 'cors',
-          }
-        ).then((response) => response.json());
-        setData(response.rows);
+        await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-all/${campaign}`, {
+          method: 'GET',
+          mode: 'cors',
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then((response) => {
+            setData(response.rows);
+          });
         setLoading(false);
         setRefresh(false);
       };

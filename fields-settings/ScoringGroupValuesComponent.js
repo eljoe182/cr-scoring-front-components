@@ -7,11 +7,23 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
   const [scoringGroupValues, setScoringGroupValues] = useState(null);
 
   const getScoringGroupValues = async () => {
-    const response = await fetch(`${SERVER_SCORING}/scoring/settings/rules/get/${campaign}`, {
+    await fetch(`${SERVER_SCORING}/scoring/settings/rules/get/${campaign}`, {
       method: 'GET',
       mode: 'cors',
-    }).then((response) => response.json());
-    setScoringGroupValues(response || null);
+    }).then((response) => {
+      if(!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      return response.json();
+    })
+    .then((response) => {
+      setScoringGroupValues(response);
+    })
+    .catch((error) => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+    setLoading(false);
   };
 
   const handlerSubmit = async (e) => {
@@ -25,7 +37,15 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
         campaign,
         ...scoringGroupValues,
       }),
-    }).then((response) => response.json());
+    }).then((response) => {
+      if(!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      return response.json();
+    }).catch((error) => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
     setRefresh(true);
     setLoading(false);
   };
