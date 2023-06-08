@@ -74,12 +74,33 @@ const RunPeriodComponent = ({ responseDataPeriod, setScoringParams }) => {
               required
               onChange={(e) => setListId(e.target.value)}
             >
-              <option value=''>Select a option</option>
-              {dialList.map((item) => (
-                <option key={item.listId} value={item.listId}>
-                  {`${item.listName} - ${item.listId} (${item.campaignId})`.toUpperCase()}
-                </option>
-              ))}
+              {dialList.core1 && dialList.core1.length > 0 && (
+                <optgroup label='CORE 1'>
+                  {dialList.core1.map((item) => (
+                    <option key={item.listId} value={item.listId}>
+                      {`${item.listName} - ${item.listId} (${item.campaignId})`.toUpperCase()}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {dialList.core11 && dialList.core11.length > 0 && (
+                <optgroup label='CORE 11'>
+                  {dialList.core11.map((item) => (
+                    <option key={item.listId} value={item.listId}>
+                      {`${item.listName} - ${item.listId} (${item.campaignId})`.toUpperCase()}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {dialList.core21 && dialList.core21.length > 0 && (
+                <optgroup label='CORE 21'>
+                  {dialList.core21.map((item) => (
+                    <option key={item.listId} value={item.listId}>
+                      {`${item.listName} - ${item.listId} (${item.campaignId})`.toUpperCase()}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
             </select>
           </div>
           <div className='col-md-6'>

@@ -36,15 +36,15 @@ const SelectCampaignComponent = ({ setCampaign, setRefresh }) => {
             value={campaignSelected}
             required
             onChange={(e) => {
-              setCampaignSelected(e.target.value)
-              setCampaign(e.target.value)
-              setRefresh(true)
+              setCampaignSelected(e.target.value);
+              setCampaign(e.target.value);
+              setRefresh(true);
             }}
           >
             <option value=''>Select a option</option>
             {campaigns.map((item) => (
-              <option key={item.code} value={item.code}>
-                {`${item.name} (${item.code})`.toUpperCase()}
+              <option key={item} value={item}>
+                {`${item}`.toUpperCase()}
               </option>
             ))}
           </select>
