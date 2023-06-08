@@ -2,8 +2,7 @@
 
 const { useEffect, useState, useCallback } = React;
 
-const ScoringSettingsTableComponent = ({ refresh, setRefresh, campaign, }) => {
-
+const ScoringSettingsTableComponent = ({ refresh, setRefresh, campaign }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -12,10 +11,13 @@ const ScoringSettingsTableComponent = ({ refresh, setRefresh, campaign, }) => {
       const getData = async () => {
         setLoading(true);
         setData([]);
-        const response = await fetch(`${SERVER_SCORING}/scoring/settings/fields/get-all/${campaign}`, {
-          method: 'GET',
-          mode: 'cors',
-        }).then((response) => response.json());
+        const response = await fetch(
+          `${SERVER_SCORING}/scoring/settings/fields/get-all/${campaign}`,
+          {
+            method: 'GET',
+            mode: 'cors',
+          }
+        ).then((response) => response.json());
         setData(response.rows);
         setLoading(false);
         setRefresh(false);
@@ -24,12 +26,17 @@ const ScoringSettingsTableComponent = ({ refresh, setRefresh, campaign, }) => {
     }
   }, [refresh, campaign]);
 
+  if (campaign === '' && data.length === 0) {
+    return <div></div>;
+  }
+
   return (
     <div className='box'>
       <div className='box-header'>
-        <h3 className='box-title'> Scoring Fields Settings {
-          campaign === '' ? '' : `for ${campaign}`
-        }</h3>
+        <h3 className='box-title'>
+          {' '}
+          Scoring Fields Settings {campaign === '' ? '' : `for ${campaign}`}
+        </h3>
       </div>
       <div className='box-body table-responsive-md'>
         <table className='table table-hover table-striped nowrap'>

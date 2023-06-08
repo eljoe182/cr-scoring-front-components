@@ -4,14 +4,14 @@ const { useEffect, useState } = React;
 
 const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
   const [loading, setLoading] = useState(false);
-  const [scoringGroupValues, setScoringGroupValues] = useState([]);
+  const [scoringGroupValues, setScoringGroupValues] = useState(null);
 
   const getScoringGroupValues = async () => {
     const response = await fetch(`${SERVER_SCORING}/scoring/settings/rules/get/${campaign}`, {
       method: 'GET',
       mode: 'cors',
     }).then((response) => response.json());
-    setScoringGroupValues(response.data || []);
+    setScoringGroupValues(response || null);
   };
 
   const handlerSubmit = async (e) => {
@@ -39,6 +39,10 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
     if (campaign !== '') getData();
   }, [campaign]);
 
+  if (campaign === '') {
+    return <div></div>;
+  }
+
   return (
     <div className='box box-primary box-solid'>
       <div className='box-header with-border'>
@@ -55,7 +59,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring1From'
                 id='scoring1From'
-                value={scoringGroupValues.score1 ? scoringGroupValues.score1.min : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score1.min : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -72,7 +76,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring1To'
                 id='scoring1To'
-                value={scoringGroupValues.score1 ? scoringGroupValues.score1.max : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score1.max : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -92,7 +96,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring2From'
                 id='scoring2From'
-                value={scoringGroupValues.score2 ? scoringGroupValues.score2.min : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score2.min : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -109,7 +113,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring2To'
                 id='scoring2To'
-                value={scoringGroupValues.score2 ? scoringGroupValues.score2.max : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score2.max : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -129,7 +133,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring3From'
                 id='scoring3From'
-                value={scoringGroupValues.score3 ? scoringGroupValues.score3.min : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score3.min : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -146,7 +150,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring3To'
                 id='scoring3To'
-                value={scoringGroupValues.score3 ? scoringGroupValues.score3.max : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score3.max : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -166,7 +170,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring4From'
                 id='scoring4From'
-                value={scoringGroupValues.score4 ? scoringGroupValues.score4.min : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score4.min : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -183,7 +187,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring4To'
                 id='scoring4To'
-                value={scoringGroupValues.score4 ? scoringGroupValues.score4.max : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score4.max : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -203,7 +207,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring5From'
                 id='scoring5From'
-                value={scoringGroupValues.score5 ? scoringGroupValues.score5.min : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score5.min : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
@@ -220,7 +224,7 @@ const ScoringGroupValuesComponent = ({ setRefresh, campaign }) => {
                 type='number'
                 name='scoring5To'
                 id='scoring5To'
-                value={scoringGroupValues.score5 ? scoringGroupValues.score5.max : '0'}
+                value={scoringGroupValues ? scoringGroupValues.score5.max : '0'}
                 onChange={(e) => {
                   const { value } = e.target;
                   setScoringGroupValues((prevState) => ({
